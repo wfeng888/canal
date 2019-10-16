@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import com.alibaba.otter.canal.client.adapter.support.DatasourceConfig;
 public class AdapterCanalConfig extends CanalClientConfig {
 
     public final Set<String>              DESTINATIONS = new LinkedHashSet<>();
+    public final Map<String,Boolean>       SYNCSWITCHS  = new ConcurrentHashMap<>();
 
     private Map<String, DatasourceConfig> srcDataSources;
 
@@ -34,9 +36,11 @@ public class AdapterCanalConfig extends CanalClientConfig {
         if (canalAdapters != null) {
             synchronized (DESTINATIONS) {
                 DESTINATIONS.clear();
+                SYNCSWITCHS.clear();
                 for (CanalAdapter canalAdapter : canalAdapters) {
                     if (canalAdapter.getInstance() != null) {
                         DESTINATIONS.add(canalAdapter.getInstance());
+                        SYNCSWITCHS.put(canalAdapter.getInstance(), canalAdapter.getSyncSwitch());
                     }
                 }
             }

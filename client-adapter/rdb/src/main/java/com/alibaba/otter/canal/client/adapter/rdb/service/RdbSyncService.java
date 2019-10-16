@@ -439,8 +439,17 @@ public class RdbSyncService {
     }
 
     private void appendCondition(MappingConfig.DbMapping dbMapping, StringBuilder sql, Map<String, Integer> ctype,
-                                 List<Map<String, ?>> values, Map<String, Object> d, Map<String, Object> o) {
-        // 拼接主键
+                                 List<Map<String, ?>> values, Map<String, Object> d, Map<String, Object> o) {       
+    	// 拼接主键
+    	// sometimes has no primary key    	
+    	Map<String, String> whereColumn  = dbMapping.getTargetPk();
+		if (whereColumn.isEmpty() && dbMapping.getMirrorDb() ) {
+			if (o != null && !o.isEmpty()) {
+				o.forEach((ocol,ovalues) -> {	whereColumn.put(ocol, ocol);	});
+			}else {
+				d.forEach((dcol,dvalues) -> {	whereColumn.put(dcol, dcol);	});
+			}
+		}
         for (Map.Entry<String, String> entry : dbMapping.getTargetPk().entrySet()) {
             String targetColumnName = entry.getKey();
             String srcColumnName = entry.getValue();

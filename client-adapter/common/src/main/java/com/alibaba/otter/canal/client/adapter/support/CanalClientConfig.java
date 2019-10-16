@@ -177,6 +177,8 @@ public class CanalClientConfig {
         private String      instance; // 实例名
 
         private List<Group> groups;  // 适配器分组列表
+        
+        private boolean     syncSwitch;//同步开关
 
         public String getInstance() {
             return instance;
@@ -195,6 +197,14 @@ public class CanalClientConfig {
         public void setGroups(List<Group> groups) {
             this.groups = groups;
         }
+        
+        public boolean getSyncSwitch() {
+			return syncSwitch;
+		}
+
+		public void setSyncSwitch(boolean syncSwitch) {
+			this.syncSwitch = syncSwitch;
+		}
     }
 
     public static class Group {
